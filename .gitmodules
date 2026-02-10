@@ -1,0 +1,3 @@
+[submodule "config-server"]
+	path = config-server
+	url = https://github.com/sdcio/config-server.git
