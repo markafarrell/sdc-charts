@@ -1,0 +1,53 @@
+name: Publish Helm Chart to GHCR
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Required to push to ghcr.io
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.19.0 # Use a recent version supporting OCI
+
+      - name: Log in to GitHub Container Registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
+
+      - name: Get appVersion
+        id: get_app_version
+        run: |
+          # Extract the app version from values.yaml
+          APP_VERSION=$(yq -r '.configServer.image.tag' charts/sdc/values.yaml)
+          echo "APP_VERSION=$APP_VERSION" >> $GITHUB_ENV
+
+      - name: Checkout config-data repository
+        uses: actions/checkout@v4
+        with:
+          repository: sdcio/config-server
+          path: config-server
+          ref: ${{ env.APP_VERSION }}
+
+      - name: Package Helm chart
+        run: |
+          helm package ./charts/sdc --version ${{ github.ref_name }} --app-version ${{ env.APP_VERSION }}
+
+      - name: Push Helm chart to GHCR
+        run: |
+          # Define the target OCI URL: oci://ghcr.io/OWNER/REPO/CHART_NAME:VERSION
+          CHART_PACKAGE=sdc-${{ github.ref_name }}.tgz
+          OCI_URL=oci://ghcr.io/${{ github.repository }}
+          helm push $CHART_PACKAGE $OCI_URL
