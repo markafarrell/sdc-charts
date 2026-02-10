@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-schema-db
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+{{ toYaml .Values.dataServer.persistentVolume.accessModes | indent 4 }}
+  resources:
+    requests:
+      storage: "{{ .Values.dataServer.persistentVolume.size }}"

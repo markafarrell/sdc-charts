@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-config-store
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+{{ toYaml .Values.configServer.persistentVolume.accessModes | indent 4 }}
+  resources:
+    requests:
+      storage: "{{ .Values.configServer.persistentVolume.size }}"

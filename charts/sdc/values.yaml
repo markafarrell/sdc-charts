@@ -1,0 +1,49 @@
+---
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: config-server
+
+global:
+  imageRegistry:
+
+configServer:
+  image:
+    registry: ghcr.io
+    repository: sdcio/config-server
+    tag: "v0.0.53"
+    pullPolicy: IfNotPresent
+
+  persistentVolume:
+    size: 10Gi
+
+    accessModes:
+    - ReadWriteOnce
+
+dataServer:
+  image:
+    registry: ghcr.io
+    repository: sdcio/data-server
+    tag: "v0.0.66"
+
+  persistentVolume:
+    size: 10Gi
+
+  accessModes:
+    - ReadWriteOnce
+
+schemaServer:
+  persistentVolume:
+    size: 10Gi
+
+  accessModes:
+    - ReadWriteOnce
+
+workspace:
+  persistentVolume:
+    size: 10Gi
+
+  accessModes:
+    - ReadWriteOnce
