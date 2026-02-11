@@ -47,3 +47,13 @@ workspace:
 
   accessModes:
     - ReadWriteOnce
+
+# disabledValidators:
+#   mandatory: false
+#   leafref: false
+#   leafref-min-max-attributes: false
+#   pattern: false
+#   must-statement: false
+#   length: false
+#   range: false
+#   max-elements: false
