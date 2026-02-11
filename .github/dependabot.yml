@@ -2,10 +2,6 @@
 # Licensed under the Apache License 2.0
 # SPDX-License-Identifier: Apache-2.0
 version: 2
-multi-ecosystem-groups:
-  deps:
-    schedule:
-      interval: "daily"
 
 updates:
     - package-ecosystem: "github-actions"
@@ -20,5 +16,7 @@ updates:
     - package-ecosystem: "docker"
       directories:
         - "/charts/**/*"
-      multi-ecosystem-group: "deps"
-      patterns: ["*"]
+      schedule:
+        interval: "daily"
+      commit-message:
+        prefix: feat(deps)
