@@ -41,13 +41,16 @@ jobs:
           path: config-server
           ref: ${{ env.APP_VERSION }}
 
-      - name: Package Helm chart
+      - name: Package Helm charts
         run: |
           helm package ./charts/sdc --version ${{ github.ref_name }} --app-version ${{ env.APP_VERSION }}
+          helm package ./charts/sdc-crds --version ${{ github.ref_name }} --app-version ${{ env.APP_VERSION }}
 
       - name: Push Helm chart to GHCR
         run: |
           # Define the target OCI URL: oci://ghcr.io/OWNER/REPO/CHART_NAME:VERSION
           CHART_PACKAGE=sdc-${{ github.ref_name }}.tgz
+          CHART_CRD_PACKAGE=sdc-crds-${{ github.ref_name }}.tgz
           OCI_URL=oci://ghcr.io/${{ github.repository }}
           helm push $CHART_PACKAGE $OCI_URL
+          helm push $CHART_CRD_PACKAGE $OCI_URL
