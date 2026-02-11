@@ -29,3 +29,9 @@ data:
 
     prometheus:
       address: ":56090"
+
+    {{- if .Values.disabledValidators }}
+    validation-defaults:
+      disabled-validators:
+{{ toYaml .Values.disabledValidators | indent 8 }}
+    {{- end }}
