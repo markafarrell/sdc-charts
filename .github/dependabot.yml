@@ -1,0 +1,19 @@
+# Copyright 2024 Nokia
+# Licensed under the Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+version: 2
+updates:
+    - package-ecosystem: "github-actions"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      groups:
+          github-actions:
+              patterns:
+                  - "*"
+
+    - package-ecosystem: "helm"
+      directories:
+        - "/charts/**/*"
+      schedule:
+          interval: "daily"
