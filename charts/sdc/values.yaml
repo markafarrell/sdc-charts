@@ -13,7 +13,7 @@ configServer:
   image:
     registry: ghcr.io
     repository: sdcio/config-server
-    tag: "v0.0.53"
+    tag: "v0.0.54"
     pullPolicy: IfNotPresent
 
   persistentVolume:
