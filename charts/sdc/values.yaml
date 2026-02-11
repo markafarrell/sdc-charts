@@ -18,7 +18,6 @@ configServer:
 
   persistentVolume:
     size: 10Gi
-
     accessModes:
     - ReadWriteOnce
 
@@ -30,23 +29,20 @@ dataServer:
 
   persistentVolume:
     size: 10Gi
-
-  accessModes:
-    - ReadWriteOnce
+    accessModes:
+      - ReadWriteOnce
 
 schemaServer:
   persistentVolume:
     size: 10Gi
-
-  accessModes:
-    - ReadWriteOnce
+    accessModes:
+      - ReadWriteOnce
 
 workspace:
   persistentVolume:
     size: 10Gi
-
-  accessModes:
-    - ReadWriteOnce
+    accessModes:
+      - ReadWriteOnce
 
 # disabledValidators:
 #   mandatory: false
