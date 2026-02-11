@@ -1,0 +1,30 @@
+# Copyright 2024 Nokia
+# Licensed under the Apache License 2.0
+# SPDX-License-Identifier: Apache-2.0
+version: 2
+multi-ecosystem-groups:
+  deps:
+    schedule:
+      interval: "daily"
+
+updates:
+    - package-ecosystem: "github-actions"
+      directory: "/"
+      schedule:
+        interval: "daily"
+      groups:
+        github-actions:
+          patterns:
+            - "*"
+
+    - package-ecosystem: "docker"
+      directories:
+        - "/charts/**/*"
+      multi-ecosystem-group: "deps"
+      patterns: ["*"]
+
+    - package-ecosystem: "gitsubmodule"
+      directories:
+        - "/"
+      multi-ecosystem-group: "deps"
+      patterns: ["*"]
