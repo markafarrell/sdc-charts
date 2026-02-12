@@ -43,6 +43,10 @@ jobs:
 
       - name: Package Helm charts
         run: |
+          # Update CRDs
+          cp config-server/artifacts/inv.sdcio.* charts/sdc/crds
+          cp config-server/artifacts/inv.sdcio.* charts/sdc-crds/templates
+
           helm package ./charts/sdc --version ${{ github.ref_name }} --app-version ${{ env.APP_VERSION }}
           helm package ./charts/sdc-crds --version ${{ github.ref_name }} --app-version ${{ env.APP_VERSION }}
 
