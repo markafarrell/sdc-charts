@@ -4,7 +4,7 @@ metadata:
   name: config-server-metrics
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: config-server
+    {{- include "sdc.labels" . | nindent 4 }}
 spec:
   ports:
   - name: metrics
@@ -12,4 +12,4 @@ spec:
     protocol: TCP
     targetPort: 8443
   selector:
-    app.kubernetes.io/name: config-server
+    {{- include "sdc.selectorLabels" . | indent 4 }}

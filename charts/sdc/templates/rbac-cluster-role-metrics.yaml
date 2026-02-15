@@ -3,6 +3,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: config-server-metrics-auth-role
+  labels:
+    {{- include "sdc.labels" . | nindent 4 }}
 rules:
 - apiGroups: ["authentication.k8s.io"]
   resources: ["tokenreviews"]

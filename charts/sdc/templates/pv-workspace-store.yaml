@@ -3,9 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: pvc-workspace-store
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "sdc.labels" . | nindent 4 }}
 spec:
   accessModes:
-{{ toYaml .Values.workspace.persistentVolume.accessModes | indent 4 }}
+    {{ toYaml .Values.workspace.persistentVolume.accessModes | indent 4 }}
   resources:
     requests:
       storage: "{{ .Values.workspace.persistentVolume.size }}"

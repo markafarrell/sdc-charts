@@ -4,7 +4,7 @@ metadata:
   name: data-server
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: config-server
+    {{- include "sdc.labels" . | nindent 4 }}
 spec:
   ports:
   - name: data-service
@@ -12,4 +12,5 @@ spec:
     protocol: TCP
     targetPort: data-service
   selector:
+    {{- include "sdc.selectorLabels" . | indent 4 }}
     sdcio.dev/data-server: "true"

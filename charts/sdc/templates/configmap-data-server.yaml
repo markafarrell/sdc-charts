@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: data-server
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "sdc.labels" . | nindent 4 }}
 data:
   data-server.yaml: |
     grpc-server:
