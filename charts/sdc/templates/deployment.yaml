@@ -32,11 +32,17 @@ spec:
         args:
         - "--tls-cert-file=/apiserver.local.config/certificates/tls.crt"
         - "--tls-private-key-file=/apiserver.local.config/certificates/tls.key"
-        #- "--feature-gates=APIPriorityAndFairness=false"
         - "--audit-log-path=-"
         - "--audit-log-maxage=0"
         - "--audit-log-maxbackup=0"
         - "--secure-port=6443"
+      {{- range $key, $value := .Values.configServer.extraArgs }}
+        {{- if $value }}
+        - "--{{ $key }}={{ $value }}"
+        {{- else }}
+        - "--{{ $key }}"
+        {{- end }}
+      {{- end }}
         ports:
         - name: api-service
           containerPort: 6443
@@ -60,32 +66,10 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: status.hostIP
-        - name: PPROF_PORT
-          value: "8081"
-        - name: REVERTIVE
-          value: "true"
-        - name: ENABLE_SUBSCRIPTION
-          value: "true"
-        - name: ENABLE_TARGET
-          value: "true"
-        - name: ENABLE_TARGETDATASTORE
-          value: "true"
-        - name: ENABLE_TARGETCONFIGSERVER
-          value: "true"
-        - name: ENABLE_TARGETRECOVERYSERVER
-          value: "true"
-        - name: ENABLE_DISCOVERYRULE
-          value: "true"
-        - name: ENABLE_SCHEMA
-          value: "true"
-        #- name: ENABLE_CONFIG
-        #  value: "true"
-        - name: ENABLE_CONFIGSET
-          value: "true"
-        - name: ENABLE_WORKSPACE
-          value: "true"
-        - name: ENABLE_ROLLOUT
-          value: "true"
+        {{- range $key, $value := .Values.configServer.env }}
+        - name: {{ $key }}
+          value: "{{ $value }}"
+        {{- end }}
         volumeMounts:
         - name: apiserver-certs
           mountPath: /apiserver.local.config/certificates
