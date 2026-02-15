@@ -31,6 +31,17 @@ helm package ./charts/sdc --version $HELM_VERSION --app-version $APP_VERSION
 helm package ./charts/sdc-crds --version $HELM_VERSION --app-version $APP_VERSION
 ```
 
+## Test
+
+```bash
+minikube delete --all
+minikube start --embed-certs
+
+helm upgrade --install --create-namespace --namespace network-system sdc sdc-$HELM_VERSION.tgz
+
+
+```
+
 ## Install
 
 ```bash
