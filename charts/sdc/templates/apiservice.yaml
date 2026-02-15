@@ -2,6 +2,8 @@ apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
   name: v1alpha1.config.sdcio.dev
+  labels:
+    {{- include "sdc.labels" . | nindent 4 }}
 spec:
   insecureSkipTLSVerify: true
   group: config.sdcio.dev

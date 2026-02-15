@@ -4,6 +4,8 @@ kind: RoleBinding
 metadata:
   name: config-auth-reader
   namespace: kube-system
+  labels:
+    {{- include "sdc.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
