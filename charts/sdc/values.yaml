@@ -39,6 +39,14 @@ configServer:
   extraArgs: {}
     # feature-gates: "APIPriorityAndFairness=false"
 
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "250m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+
 dataServer:
   image:
     registry: ghcr.io
@@ -49,6 +57,14 @@ dataServer:
     size: 10Gi
     accessModes:
       - ReadWriteOnce
+
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "250m"
+    limits:
+      memory: "128Mi"
+      cpu: "500m"
 
 schemaServer:
   persistentVolume:
