@@ -1,18 +1,35 @@
-{{- define "config-server.image" -}}
+{{- define "api-server.image" -}}
 {{- if .Values.global.imageRegistry }}
-{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.configServer.image.repository .Values.configServer.image.tag }}
+{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.apiServer.image.repository .Values.apiServer.image.tag }}
 {{- else }}
-{{- printf "%s/%s:%s" .Values.configServer.image.registry .Values.configServer.image.repository .Values.configServer.image.tag }}
+{{- printf "%s/%s:%s" .Values.apiServer.image.registry .Values.apiServer.image.repository .Values.apiServer.image.tag }}
 {{- end }}
 {{- end }}
 
-{{- define "data-server.image" -}}
+{{- define "controller.image" -}}
 {{- if .Values.global.imageRegistry }}
-{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.dataServer.image.repository .Values.dataServer.image.tag }}
+{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.controller.image.repository .Values.controller.image.tag }}
 {{- else }}
-{{- printf "%s/%s:%s" .Values.dataServer.image.registry .Values.dataServer.image.repository .Values.dataServer.image.tag }}
+{{- printf "%s/%s:%s" .Values.controller.image.registry .Values.controller.image.repository .Values.controller.image.tag }}
 {{- end }}
 {{- end }}
+
+{{- define "data-server-controller.image" -}}
+{{- if .Values.global.imageRegistry }}
+{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.dataServer.images.controller.repository .Values.dataServer.images.controller.tag }}
+{{- else }}
+{{- printf "%s/%s:%s" .Values.dataServer.images.controller.registry .Values.dataServer.images.controller.repository .Values.dataServer.images.controller.tag }}
+{{- end }}
+{{- end }}
+
+{{- define "data-server-server.image" -}}
+{{- if .Values.global.imageRegistry }}
+{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.dataServer.images.server.repository .Values.dataServer.images.server.tag }}
+{{- else }}
+{{- printf "%s/%s:%s" .Values.dataServer.images.server.registry .Values.dataServer.images.server.repository .Values.dataServer.images.server.tag }}
+{{- end }}
+{{- end }}
+
 
 {{- define "sdc.name" -}}
 {{- default "config-server" .Values.nameOverride | trunc 63 | trimSuffix "-" }}

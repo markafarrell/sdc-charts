@@ -1,17 +1,16 @@
 {{- if and (eq .Values.rbac.create true) }}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
-  name: sdc-controller-auth-reader
-  namespace: kube-system
+  name: sdc-data-server-controller-clusterrolebinding
   labels:
     {{- include "sdc.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: extension-apiserver-authentication-reader
+  kind: ClusterRole
+  name: sdc-data-server-controller-clusterrole
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.controller.serviceAccount.name }}
+  name: {{ .Values.dataServer.serviceAccount.name }}
   namespace: {{ .Release.Namespace }}
 {{- end -}}

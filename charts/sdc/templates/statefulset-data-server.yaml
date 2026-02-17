@@ -1,51 +1,43 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: config-server
+  name: data-server-controller
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "sdc.labels" . | nindent 4 }}
+    app.kubernetes.io/component: data-server-controller
 spec:
-  strategy:
-    type: Recreate
-  replicas: 1
+  replicas: {{ .Values.dataServer.replicas }}
   selector:
     matchLabels:
-      {{- include "sdc.selectorLabels" . | indent 6 }}
+      {{- include "sdc.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: data-server-controller
   template:
     metadata:
       labels:
-        {{- include "sdc.labels" . | nindent 8 }}
+        {{- include "sdc.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: data-server-controller
         sdcio.dev/data-server: "true"
+        sdcio.dev/schema-server: "true"
     spec:
       securityContext:
         runAsUser: 10000
         runAsGroup: 10000
         fsGroup: 10000
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.dataServer.serviceAccount.name }}
       containers:
-      - name: config-server
-        image: {{ include "config-server.image" . }}
+      - name: controller
+        image: {{ include "data-server-controller.image" . }}
         imagePullPolicy: Always
         command:
-        - /app/config-server
-        args:
-        - "--tls-cert-file=/apiserver.local.config/certificates/tls.crt"
-        - "--tls-private-key-file=/apiserver.local.config/certificates/tls.key"
-        - "--audit-log-path=-"
-        - "--audit-log-maxage=0"
-        - "--audit-log-maxbackup=0"
-        - "--secure-port=6443"
-      {{- range $key, $value := .Values.configServer.extraArgs }}
-        {{- if $value }}
-        - "--{{ $key }}={{ $value }}"
-        {{- else }}
-        - "--{{ $key }}"
+        - /app/controller
+        {{- range $key, $value := .Values.dataServer.extraArgs.controller }}
+          {{- if $value }}
+          - "--{{ $key }}={{ $value }}"
+          {{- else }}
+          - "--{{ $key }}"
+          {{- end }}
         {{- end }}
-      {{- end }}
-        ports:
-        - name: api-service
-          containerPort: 6443
         env:
         - name: POD_IP
           valueFrom:
@@ -66,29 +58,31 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: status.hostIP
-        {{- range $key, $value := .Values.configServer.env }}
+        - name: LOCAL_DATASERVER
+          value: "true"
+        - name: METRIC_PORT
+          value: "8443"
+        {{- range $key, $value := .Values.dataServer.env.controller }}
         - name: {{ $key }}
           value: "{{ $value }}"
         {{- end }}
         volumeMounts:
-        - name: apiserver-certs
-          mountPath: /apiserver.local.config/certificates
-          readOnly: true
-        - name: config-store
-          mountPath: /config
         - name: schema-store
           mountPath: /schemas
-        - name: workspace-store
-          mountPath: /workspace
-        resources:
-          {{- toYaml .Values.configServer.resources | nindent 10 }}
       - name: data-server
-        image: {{ include "data-server.image" . }}
+        image: {{ include "data-server-server.image" . }}
         imagePullPolicy: Always
         command:
         - /app/data-server
         args:
         - "--config=/config/data-server.yaml"
+        {{- range $key, $value := .Values.dataServer.extraArgs.server }}
+          {{- if $value }}
+          - "--{{ $key }}={{ $value }}"
+          {{- else }}
+          - "--{{ $key }}"
+          {{- end }}
+        {{- end }}
         ports:
         - name: data-service
           containerPort: 56000
@@ -97,31 +91,20 @@ spec:
           mountPath: /config
         - name: cache
           mountPath: /cached/caches
-        - name: schema-store
-          mountPath: /schemas
         - name: schema-db
           mountPath: /schemadb
-        resources:
-          {{- toYaml .Values.dataServer.resources | nindent 10 }}
+        - name: schema-store
+          mountPath: /schemas
       volumes:
       - name: data-server-config
         configMap:
           name: data-server
-      - name: apiserver-certs
-        secret:
-          secretName: config-server-cert
       - name: cache
         emptyDir:
           sizeLimit: 10Gi
-      - name: config-store
-        persistentVolumeClaim:
-          claimName: pvc-config-store
-      - name: schema-store # yang file from git
-        persistentVolumeClaim:
-          claimName: pvc-schema-store
       - name: schema-db # persistent schema obj from the parsed yang files
         persistentVolumeClaim:
           claimName: pvc-schema-db
-      - name: workspace-store # git workspace
+      - name: schema-store # yang file from git
         persistentVolumeClaim:
-          claimName: pvc-workspace-store
+          claimName: pvc-schema-store

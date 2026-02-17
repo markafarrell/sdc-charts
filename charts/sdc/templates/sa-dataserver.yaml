@@ -1,0 +1,9 @@
+{{- if and .Values.rbac.create .Values.dataServer.serviceAccount.create -}}
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: {{ .Values.dataServer.serviceAccount.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "sdc.labels" . | nindent 4 }}
+{{- end -}}

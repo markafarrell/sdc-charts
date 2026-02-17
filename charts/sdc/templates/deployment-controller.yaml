@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "sdc.labels" . | nindent 4 }}
+    app.kubernetes.io/component: controller
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "sdc.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: controller
+  template:
+    metadata:
+      labels:
+        {{- include "sdc.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: controller
+    spec:
+      securityContext:
+        runAsUser: 10000
+        runAsGroup: 10000
+        fsGroup: 10000
+      serviceAccountName: {{ .Values.controller.serviceAccount.name }}
+      containers:
+      - name: controller
+        image: {{ include "controller.image" . }}
+        imagePullPolicy: Always
+        command:
+        - /app/controller
+        {{- range $key, $value := .Values.controller.extraArgs }}
+          {{- if $value }}
+          - "--{{ $key }}={{ $value }}"
+          {{- else }}
+          - "--{{ $key }}"
+          {{- end }}
+        {{- end }}
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: "NODE_NAME"
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: "NODE_IP"
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
+        - name: METRIC_PORT
+          value: "8443"
+        {{- range $key, $value := .Values.controller.env }}
+        - name: {{ $key }}
+          value: "{{ $value }}"
+        {{- end }}
+        volumeMounts:
+        #- name: schema-store
+        #  mountPath: /schemas
+        - name: workspace-store
+          mountPath: /workspace
+        resources:
+          {{- toYaml .Values.controller.resources | nindent 10 }}
+      volumes:
+      #- name: schema-store # yang file from git
+      #  persistentVolumeClaim:
+      #    claimName: pvc-schema-store
+      - name: workspace-store # git workspace
+        persistentVolumeClaim:
+          claimName: pvc-workspace-store

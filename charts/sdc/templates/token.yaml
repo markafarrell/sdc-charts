@@ -4,7 +4,7 @@ metadata:
   name: config-server-token
   namespace: {{ .Release.Namespace }}
   annotations:
-    kubernetes.io/service-account.name: {{ .Values.serviceAccount.name }}
+    kubernetes.io/service-account.name: {{ .Values.controller.serviceAccount.name }}
   labels:
     {{- include "sdc.labels" . | nindent 4 }}
 type: kubernetes.io/service-account-token
