@@ -2,9 +2,7 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: sdc-controller-clusterrole
-  labels:
-    {{- include "sdc.labels" . | nindent 4 }}
+  name: sdc-data-server-controller-clusterrole
 rules:
 - apiGroups: [""]
   resources: ["namespaces", "secrets", "services", "pods"]

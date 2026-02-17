@@ -7,7 +7,7 @@ metadata:
     {{- include "sdc.labels" . | nindent 4 }}
 spec:
   accessModes:
-    {{- toYaml .Values.schemaServer.persistentVolume.accessModes | nindent 4 }}
+    {{- toYaml .Values.dataServer.persistentVolumes.schemaStore.accessModes | nindent 4 }}
   resources:
     requests:
-      storage: "{{ .Values.schemaServer.persistentVolume.size }}"
+      storage: "{{ .Values.dataServer.persistentVolumes.schemaStore.size }}"

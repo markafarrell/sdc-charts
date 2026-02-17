@@ -1,16 +1,16 @@
 {{- if and (eq .Values.rbac.create true) }}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
-  name: config-server-clusterrolebinding
+  name: sdc-api-server-clusterrolebinding
   labels:
     {{- include "sdc.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: config-server-clusterrole
+  name: sdc-api-server-clusterrole
 subjects:
 - kind: ServiceAccount
-  name: config-server
+  name: {{ .Values.apiServer.serviceAccount.name }}
   namespace: {{ .Release.Namespace }}
 {{- end -}}

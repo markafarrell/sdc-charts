@@ -1,8 +1,8 @@
-{{- if and .Values.rbac.create .Values.serviceAccount.create -}}
+{{- if and .Values.rbac.create .Values.controller.serviceAccount.create -}}
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: {{ .Values.serviceAccount.name }}
+  name: {{ .Values.controller.serviceAccount.name }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "sdc.labels" . | nindent 4 }}

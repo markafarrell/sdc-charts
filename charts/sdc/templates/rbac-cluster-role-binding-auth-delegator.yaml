@@ -11,6 +11,6 @@ roleRef:
   name: system:auth-delegator
 subjects:
 - kind: ServiceAccount
-  name: config-server
+  name: api-server
   namespace: {{ .Release.Namespace }}
 {{- end -}}

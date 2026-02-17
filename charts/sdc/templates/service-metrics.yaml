@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "sdc.labels" . | nindent 4 }}
+    app.kubernetes.io/component: sdc-controller
 spec:
   ports:
   - name: metrics
@@ -13,3 +14,4 @@ spec:
     targetPort: 8443
   selector:
     {{- include "sdc.selectorLabels" . | indent 4 }}
+    app.kubernetes.io/component: sdc-controller

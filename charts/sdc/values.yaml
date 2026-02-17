@@ -2,42 +2,62 @@
 rbac:
   create: true
 
-serviceAccount:
-  create: true
-  name: config-server
-
 global:
   imageRegistry:
 
-configServer:
+apiServer:
   image:
     registry: ghcr.io
-    repository: sdcio/config-server
-    tag: "v0.0.54"
+    repository: sdcio/config-server-api-server
+    tag: "v0.0.55"
     pullPolicy: IfNotPresent
+
+  serviceAccount:
+    create: true
+    name: api-server
 
   persistentVolume:
     size: 10Gi
     accessModes:
-    - ReadWriteOnce
+      - ReadWriteOnce
+
+  env: {}
+
+  extraArgs: {}
+    # feature-gates: "APIPriorityAndFairness=false"
+
+controller:
+  image:
+    registry: ghcr.io
+    repository: sdcio/config-server-controller
+    tag: "v0.0.55"
+    pullPolicy: IfNotPresent
+
+  serviceAccount:
+    create: true
+    name: controller
+
+  persistentVolume:
+    size: 10Gi
+    accessModes:
+      - ReadWriteOnce
 
   env:
     PPROF_PORT: "8081"
-    REVERTIVE: "true"
-    ENABLE_SUBSCRIPTION:  "true"
-    ENABLE_TARGET: "true"
-    ENABLE_TARGETDATASTORE: "true"
-    ENABLE_TARGETCONFIGSERVER: "true"
-    ENABLE_TARGETRECOVERYSERVER: "true"
+    # REVERTIVE: "true"
+    # ENABLE_SUBSCRIPTION:  "true"
+    # ENABLE_TARGET: "true"
+    # ENABLE_TARGETDATASTORE: "true"
+    # ENABLE_TARGETCONFIGSERVER: "true"
+    # ENABLE_TARGETRECOVERYSERVER: "true"
     ENABLE_DISCOVERYRULE: "true"
-    ENABLE_SCHEMA: "true"
-    ENABLE_CONFIG: "true"
+    # ENABLE_SCHEMA: "true"
+    # ENABLE_CONFIG: "true"
     ENABLE_CONFIGSET: "true"
     ENABLE_WORKSPACE: "true"
     ENABLE_ROLLOUT: "true"
 
   extraArgs: {}
-    # feature-gates: "APIPriorityAndFairness=false"
 
   resources:
     requests:
@@ -48,42 +68,75 @@ configServer:
       cpu: "500m"
 
 dataServer:
-  image:
-    registry: ghcr.io
-    repository: sdcio/data-server
-    tag: "v0.0.66"
+  images:
+    controller:
+      registry: ghcr.io
+      repository: sdcio/config-server-controller
+      tag: "v0.0.55"
+    server:
+      registry: ghcr.io
+      repository: sdcio/data-server
+      tag: "v0.0.66"
 
-  persistentVolume:
-    size: 10Gi
-    accessModes:
-      - ReadWriteOnce
+  replicas: 1
+
+  persistentVolumes:
+    schemaStore:
+      size: 10Gi
+      accessModes:
+        - ReadWriteOnce
+    schemaDb:
+      size: 10Gi
+      accessModes:
+        - ReadWriteOnce
+
+  env:
+    controller:
+      PPROF_PORT: "8081"
+      REVERTIVE: "true"
+      ENABLE_SUBSCRIPTION:  "true"
+      ENABLE_TARGET: "true"
+      ENABLE_TARGETDATASTORE: "true"
+      ENABLE_TARGETCONFIGSERVER: "true"
+      ENABLE_TARGETRECOVERYSERVER: "true"
+      # ENABLE_DISCOVERYRULE: "true"
+      ENABLE_SCHEMA: "true"
+      # ENABLE_CONFIG: "true"
+      # ENABLE_CONFIGSET: "true"
+      # ENABLE_WORKSPACE: "true"
+      # ENABLE_ROLLOUT: "true"
+    server: {}
+
+  extraArgs:
+    controller: {}
+    server: {}
+
+  serviceAccount:
+    create: true
+    name: data-server-controller
 
   resources:
-    requests:
-      memory: "64Mi"
-      cpu: "250m"
-    limits:
-      memory: "128Mi"
-      cpu: "500m"
+    controller:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    server:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
 
-schemaServer:
-  persistentVolume:
-    size: 10Gi
-    accessModes:
-      - ReadWriteOnce
-
-workspace:
-  persistentVolume:
-    size: 10Gi
-    accessModes:
-      - ReadWriteOnce
-
-# disabledValidators:
-#   mandatory: false
-#   leafref: false
-#   leafref-min-max-attributes: false
-#   pattern: false
-#   must-statement: false
-#   length: false
-#   range: false
-#   max-elements: false
+  # disabledValidators:
+  #   mandatory: false
+  #   leafref: false
+  #   leafref-min-max-attributes: false
+  #   pattern: false
+  #   must-statement: false
+  #   length: false
+  #   range: false
+  #   max-elements: false

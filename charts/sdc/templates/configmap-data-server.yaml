@@ -35,5 +35,5 @@ data:
     {{- if .Values.disabledValidators }}
     validation-defaults:
       disabled-validators:
-{{ toYaml .Values.disabledValidators | indent 8 }}
+      {{- toYaml .Values.disabledValidators | nindent 8 }}
     {{- end }}
