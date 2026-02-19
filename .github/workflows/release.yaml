@@ -18,6 +18,9 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Install dependencies
+        run: npm install -D conventional-changelog-conventionalcommits
+
       - name: Release
         uses: cycjimmy/semantic-release-action@v6
         env:
