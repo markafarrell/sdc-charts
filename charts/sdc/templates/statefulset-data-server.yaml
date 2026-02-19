@@ -69,6 +69,8 @@ spec:
         volumeMounts:
         - name: schema-store
           mountPath: /schemas
+        resources:
+          {{- toYaml .Values.dataServer.resources.controller | nindent 10 }}
       - name: data-server
         image: {{ include "data-server-server.image" . }}
         imagePullPolicy: Always
@@ -95,6 +97,8 @@ spec:
           mountPath: /schemadb
         - name: schema-store
           mountPath: /schemas
+        resources:
+          {{- toYaml .Values.dataServer.resources.server | nindent 10 }}
       volumes:
       - name: data-server-config
         configMap:
