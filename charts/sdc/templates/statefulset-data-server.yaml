@@ -31,7 +31,7 @@ spec:
         imagePullPolicy: Always
         command:
         - /app/controller
-        {{- range $key, $value := .Values.dataServer.extraArgs.controller }}
+        {{- range $key, $value := .Values.dataServer.controller.extraArgs }}
           {{- if $value }}
           - "--{{ $key }}={{ $value }}"
           {{- else }}
@@ -62,7 +62,7 @@ spec:
           value: "true"
         - name: METRIC_PORT
           value: "8443"
-        {{- range $key, $value := .Values.dataServer.env.controller }}
+        {{- range $key, $value := .Values.dataServer.controller.env }}
         - name: {{ $key }}
           value: "{{ $value }}"
         {{- end }}
@@ -70,7 +70,7 @@ spec:
         - name: schema-store
           mountPath: /schemas
         resources:
-          {{- toYaml .Values.dataServer.resources.controller | nindent 10 }}
+          {{- toYaml .Values.dataServer.controller.resources | nindent 10 }}
       - name: data-server
         image: {{ include "data-server-server.image" . }}
         imagePullPolicy: Always
@@ -78,7 +78,7 @@ spec:
         - /app/data-server
         args:
         - "--config=/config/data-server.yaml"
-        {{- range $key, $value := .Values.dataServer.extraArgs.server }}
+        {{- range $key, $value := .Values.dataServer.server.extraArgs }}
           {{- if $value }}
           - "--{{ $key }}={{ $value }}"
           {{- else }}
@@ -98,7 +98,7 @@ spec:
         - name: schema-store
           mountPath: /schemas
         resources:
-          {{- toYaml .Values.dataServer.resources.server | nindent 10 }}
+          {{- toYaml .Values.dataServer.server.resources | nindent 10 }}
       volumes:
       - name: data-server-config
         configMap:

@@ -76,30 +76,12 @@ controller:
       cpu: "500m"
 
 dataServer:
-  images:
-    controller:
+  controller:
+    image:
       registry: ghcr.io
       repository: sdcio/config-server-controller
       tag: "v0.0.55"
-    server:
-      registry: ghcr.io
-      repository: sdcio/data-server
-      tag: "v0.0.66"
-
-  replicas: 1
-
-  persistentVolumes:
-    schemaStore:
-      size: 10Gi
-      accessModes:
-        - ReadWriteOnce
-    schemaDb:
-      size: 10Gi
-      accessModes:
-        - ReadWriteOnce
-
-  env:
-    controller:
+    env:
       PPROF_PORT: "8081"
       REVERTIVE: "true"
       ENABLE_SUBSCRIPTION:  "true"
@@ -113,31 +95,45 @@ dataServer:
       # ENABLE_CONFIGSET: "true"
       # ENABLE_WORKSPACE: "true"
       # ENABLE_ROLLOUT: "true"
-    server: {}
 
-  extraArgs:
-    controller: {}
-    server: {}
+    extraArgs: {}
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+  server:
+    image:
+      registry: ghcr.io
+      repository: sdcio/data-server
+      tag: "v0.0.66"
+    env: {}
+    extraArgs: {}
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+
+  replicas: 1
+
+  persistentVolumes:
+    schemaStore:
+      size: 10Gi
+      accessModes:
+        - ReadWriteOnce
+    schemaDb:
+      size: 10Gi
+      accessModes:
+        - ReadWriteOnce
 
   serviceAccount:
     create: true
     name: data-server-controller
-
-  resources:
-    controller:
-      requests:
-        memory: "64Mi"
-        cpu: "250m"
-      limits:
-        memory: "128Mi"
-        cpu: "500m"
-    server:
-      requests:
-        memory: "64Mi"
-        cpu: "250m"
-      limits:
-        memory: "128Mi"
-        cpu: "500m"
 
   # disabledValidators:
   #   mandatory: false
