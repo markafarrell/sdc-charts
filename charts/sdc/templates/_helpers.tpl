@@ -16,17 +16,17 @@
 
 {{- define "data-server-controller.image" -}}
 {{- if .Values.global.imageRegistry }}
-{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.dataServer.images.controller.repository .Values.dataServer.images.controller.tag }}
+{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.dataServer.controller.image.repository .Values.dataServer.controller.image.tag }}
 {{- else }}
-{{- printf "%s/%s:%s" .Values.dataServer.images.controller.registry .Values.dataServer.images.controller.repository .Values.dataServer.images.controller.tag }}
+{{- printf "%s/%s:%s" .Values.dataServer.controller.image.registry .Values.dataServer.controller.image.repository .Values.dataServer.controller.image.tag }}
 {{- end }}
 {{- end }}
 
 {{- define "data-server-server.image" -}}
 {{- if .Values.global.imageRegistry }}
-{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.dataServer.images.server.repository .Values.dataServer.images.server.tag }}
+{{- printf "%s/%s:%s" .Values.global.imageRegistry .Values.dataServer.server.image.repository .Values.dataServer.server.image.tag }}
 {{- else }}
-{{- printf "%s/%s:%s" .Values.dataServer.images.server.registry .Values.dataServer.images.server.repository .Values.dataServer.images.server.tag }}
+{{- printf "%s/%s:%s" .Values.dataServer.server.image.registry .Values.dataServer.server.image.repository .Values.dataServer.server.image.tag }}
 {{- end }}
 {{- end }}
 
