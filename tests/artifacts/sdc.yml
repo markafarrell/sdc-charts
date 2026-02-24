@@ -1,0 +1,114 @@
+---
+apiVersion: inv.sdcio.dev/v1alpha1
+kind: Schema
+metadata:
+  name: sros.nokia.sdcio.dev-22.2.1
+  namespace: network-system
+spec:
+  provider: sros.nokia.sdcio.dev
+  version: 22.2.R1
+  repositories:
+  - repoURL: https://github.com/nokia/7x50_YangModels
+    kind: tag
+    ref: sros_22.2.r1
+    dirs:
+    - src: YANG
+      dst: .
+    schema:
+      models:
+      - nokia-combined
+      includes:
+      - ietf
+      - nokia-sros-yang-extensions.yang
+      excludes: []
+---
+apiVersion: inv.sdcio.dev/v1alpha1
+kind: TargetConnectionProfile
+metadata:
+  name: test-sros-netconf
+  namespace: network-system
+  labels:
+    scdio.dev/env: ci-test
+spec:
+  port: 830
+  protocol: netconf
+  encoding: UNKNOWN
+  skipVerify: true
+  includeNS: true
+  operationWithNS: true
+
+---
+apiVersion: inv.sdcio.dev/v1alpha1
+kind: TargetSyncProfile
+metadata:
+  name: test-sros-netconf-getconfig
+  namespace: network-system
+spec:
+  buffer: 0
+  workers: 10
+  validate: true
+  sync:
+  - name: config
+    protocol: netconf
+    port: 830
+    paths:
+    - /
+    mode: get
+    encoding: CONFIG
+    interval: "30s"
+
+---
+apiVersion: inv.sdcio.dev/v1alpha1
+kind: DiscoveryRule
+metadata:
+  name: sros-dr-static
+  namespace: network-system
+spec:
+  period: 1m
+  concurrentScans: 2
+  defaultSchema:
+    provider: sros.nokia.sdcio.dev
+    version: 22.2.R1
+  addresses:
+    - address: notconf-test.network-system.svc.cluster.local
+      hostName: notconf-test
+  targetConnectionProfiles:
+  - credentials: sros.nokia.sdcio.dev
+    connectionProfile: test-sros-netconf
+    syncProfile: test-sros-netconf-getconfig
+  targetTemplate:
+    labels:
+      sdcio.dev/target-type: sros
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sros.nokia.sdcio.dev
+  namespace: network-system
+type: kubernetes.io/basic-auth
+stringData:
+  username: admin
+  password: admin
+
+---
+apiVersion: config.sdcio.dev/v1alpha1
+kind: ConfigSet
+metadata:
+  name: customer
+  namespace: network-system
+spec:
+  target:
+    targetSelector:
+      matchLabels:
+        sdcio.dev/device: sros
+  priority: 5
+  config:
+  - path: /
+    value:
+      configure:
+        service:
+          customer:
+            - customer-name: "1"
+              customer-id: 1
+            - customer-name: "2"
+              customer-id: 2

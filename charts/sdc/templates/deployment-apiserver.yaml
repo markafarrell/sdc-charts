@@ -71,6 +71,8 @@ spec:
               fieldPath: status.hostIP
         - name: METRIC_PORT
           value: "8443"
+        - name: SDC_DATA_SERVER
+          value: data-server.{{ .Release.Namespace }}.svc.cluster.local:56000
         {{- range $key, $value := .Values.apiServer.env }}
         - name: {{ $key }}
           value: "{{ $value }}"

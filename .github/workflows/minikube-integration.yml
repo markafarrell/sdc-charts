@@ -1,0 +1,32 @@
+name: Minikube Integration Test
+
+on:
+  pull_request:
+
+jobs:
+  minikube-integration:
+    name: Run minikube integration test
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: '1.27.0'
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.16.0
+
+      - name: Install minikube
+        run: |
+          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube /usr/local/bin/
+
+      - name: Run tests
+        run: ./tests/run_all_tests.sh

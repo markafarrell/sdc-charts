@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: __RELEASE__
+  labels:
+    app: __RELEASE__
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: __RELEASE__
+  template:
+    metadata:
+      labels:
+        app: __RELEASE__
+    spec:
+      containers:
+      - name: notconf
+        image: __IMAGE__
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: netconf
+          containerPort: 830
+          protocol: TCP
