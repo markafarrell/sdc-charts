@@ -1,0 +1,68 @@
+
+---
+apiVersion: inv.sdcio.dev/v1alpha1
+kind: TargetConnectionProfile
+metadata:
+  name: test-sros-netconf
+  namespace: notconf
+  labels:
+    scdio.dev/env: ci-test
+spec:
+  port: 830
+  protocol: netconf
+  skipVerify: true
+  includeNS: true
+  operationWithNS: true
+
+---
+apiVersion: inv.sdcio.dev/v1alpha1
+kind: TargetSyncProfile
+metadata:
+  name: test-sros-netconf-getconfig
+  namespace: notconf
+spec:
+  buffer: 0
+  workers: 10
+  validate: true
+  sync:
+  - name: config
+    protocol: netconf
+    port: 830
+    paths:
+    - /
+    mode: get
+    encoding: CONFIG
+    interval: "30s"
+
+---
+apiVersion: inv.sdcio.dev/v1alpha1
+kind: DiscoveryRule
+metadata:
+  name: sros-dr-static
+  namespace: notconf
+spec:
+  period: 1m
+  concurrentScans: 2
+  defaultSchema:
+    provider: sros.nokia.sdcio.dev
+    version: 22.2.R1
+  addresses:
+    - address: notconf.notconf.svc.cluster.local
+      hostName: notconf-test
+  targetConnectionProfiles:
+  - credentials: sros.nokia.sdcio.dev
+    connectionProfile: test-sros-netconf
+    syncProfile: test-sros-netconf-getconfig
+  targetTemplate:
+    labels:
+      sdcio.dev/target-type: sros
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sros.nokia.sdcio.dev
+  namespace: notconf
+type: kubernetes.io/basic-auth
+stringData:
+  username: admin
+  password: admin

@@ -1,0 +1,35 @@
+name: Integration Tests
+
+on:
+  pull_request:
+
+jobs:
+  integration-tests:
+    name: Run integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v5
+        with:
+          version: 'v1.35.3'
+
+      - name: Install Helm
+        uses: azure/setup-helm@v5
+        with:
+          version: 'v3.20.1'
+
+      - name: Install minikube
+        run: |
+          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube /usr/local/bin/
+
+      - name: Start harness
+        run: ./tests/start.sh
+
+      - name: Run Tests
+        run: ./tests/test.sh

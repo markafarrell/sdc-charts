@@ -2,43 +2,36 @@
 
 ## Update crds
 
+You can also update CRDs automatically using the Makefile target added to this repository. The target reads the `configServer.image.tag` from `charts/sdc/values.yaml`, checks out that version in the `config-server` repository, and copies the `artifacts/inv.sdcio.*` files into both charts.
+
 ```bash
-git clone https://github.com/sdcio/config-server.git
+# clone upstream and update charts (default repo)
+make update-crds
 
-APP_VERSION=$(yq -r '.controller.image.tag' charts/sdc/values.yaml)
-
-cd config-server
-git checkout $APP_VERSION
-
-cd ..
-
-cp config-server/artifacts/inv.sdcio.* charts/sdc/crds
-cp config-server/artifacts/inv.sdcio.* charts/sdc-crds/templates
+# override the repo if you want a fork
+make update-crds CONFIG_SERVER_REPO=https://github.com/youruser/config-server.git
 ```
 
 ## Render Chart
 
 ```bash
-helm template --namespace sdc-system --create-namespace --include-crds charts/sdc
+make render-sdc
+make render-sdc-crds
 ```
 
 ## Package chart
 
 ```bash
-APP_VERSION=$(yq -r '.controller.image.tag' charts/sdc/values.yaml)
-CHART_VERSION=v2.x.x
-helm package ./charts/sdc --version $CHART_VERSION --app-version $APP_VERSION
-helm package ./charts/sdc-crds --version $CHART_VERSION --app-version $APP_VERSION
+make package-sdc CHART_VERSION=2.x.x
+make package-sdc-crds CHART_VERSION=2.x.x
 ```
 
 ## Test
 
 ```bash
-minikube delete --all
-minikube start --embed-certs
-
-helm upgrade --install --create-namespace --namespace sdc-system sdc-crds sdc-crds-$CHART_VERSION.tgz --wait
-helm upgrade --install --create-namespace --namespace sdc-system sdc sdc-$CHART_VERSION.tgz --wait
+cd tests
+./start.sh
+./test.sh
 ```
 
 ## Install
