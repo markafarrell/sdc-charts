@@ -32,7 +32,7 @@
 
 
 {{- define "sdc.name" -}}
-{{- default "config-server" .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default "sdc" .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
