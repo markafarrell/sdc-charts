@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    {{- include "sdc.labels" . | nindent 4 }}
+    app.kubernetes.io/component: data-server-controller
+  name: allow-traffic-to-data-server
+  namespace: {{ .Release.Namespace }}
+spec:
+  ingress:
+    - from:
+        - podSelector: {} # Allows traffic from all pods in this same namespace
+      ports:
+        - port: data-service
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      {{- include "sdc.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: data-server-controller
+  policyTypes:
+    - Ingress
