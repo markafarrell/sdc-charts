@@ -60,6 +60,8 @@ spec:
               fieldPath: status.hostIP
         - name: METRIC_PORT
           value: "8443"
+        - name: KUBE_FEATURE_WatchListClient
+          value: "false"
         {{- range $key, $value := .Values.controller.env }}
         - name: {{ $key }}
           value: "{{ $value }}"
