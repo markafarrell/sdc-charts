@@ -6,6 +6,10 @@ metadata:
   labels:
     {{- include "sdc.labels" . | nindent 4 }}
     app.kubernetes.io/component: data-server-controller
+  {{- with .Values.dataServer.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.dataServer.replicas }}
   selector:

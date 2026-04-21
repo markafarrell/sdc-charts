@@ -38,6 +38,9 @@ apiServer:
 
   # extraVolumes:
 
+  # annotations:
+  #   reloader.stakater.com/auto: "true"
+
 controller:
   image:
     registry: ghcr.io
@@ -78,6 +81,9 @@ controller:
     limits:
       memory: "1Gi"
       cpu: "500m"
+
+  # annotations:
+  #   reloader.stakater.com/auto: "true"
 
 dataServer:
   controller:
@@ -161,3 +167,6 @@ dataServer:
   #   length: false
   #   range: false
   #   max-elements: false
+
+  # annotations:
+  #   reloader.stakater.com/auto: "true"
