@@ -69,6 +69,9 @@ spec:
         #  mountPath: /schemas
         - name: workspace-store
           mountPath: /workspace
+        {{- if .Values.controller.extraVolumeMounts }}
+          {{ toYaml .Values.controller.extraVolumeMounts | nindent 8 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.controller.resources | nindent 10 }}
       volumes:
@@ -78,3 +81,6 @@ spec:
       - name: workspace-store # git workspace
         persistentVolumeClaim:
           claimName: pvc-workspace-store
+      {{- if .Values.controller.extraVolumes }}
+        {{ toYaml .Values.controller.extraVolumes | nindent 6 }}
+      {{- end }}

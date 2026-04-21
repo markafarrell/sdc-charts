@@ -69,6 +69,9 @@ spec:
         volumeMounts:
         - name: schema-store
           mountPath: /schemas
+        {{- if .Values.dataServer.controller.extraVolumeMounts }}
+          {{ toYaml .Values.dataServer.controller.extraVolumeMounts | nindent 8 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.dataServer.controller.resources | nindent 10 }}
       - name: data-server
@@ -97,6 +100,9 @@ spec:
           mountPath: /schemadb
         - name: schema-store
           mountPath: /schemas
+        {{- if .Values.dataServer.server.extraVolumeMounts }}
+          {{ toYaml .Values.dataServer.server.extraVolumeMounts | nindent 8 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.dataServer.server.resources | nindent 10 }}
       volumes:
@@ -112,3 +118,6 @@ spec:
       - name: schema-store # yang file from git
         persistentVolumeClaim:
           claimName: pvc-schema-store
+      {{- if .Values.dataServer.extraVolumes }}
+        {{ toYaml .Values.dataServer.extraVolumes | nindent 6 }}
+      {{- end }}
