@@ -81,6 +81,9 @@ spec:
           readOnly: true
         - name: config-store
           mountPath: /config
+        {{- if .Values.apiServer.extraVolumeMounts }}
+          {{ toYaml .Values.apiServer.extraVolumeMounts | nindent 8 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.apiServer.resources | nindent 10 }}
       volumes:
@@ -90,3 +93,6 @@ spec:
       - name: config-store
         persistentVolumeClaim:
           claimName: pvc-config-store
+      {{- if .Values.apiServer.extraVolumes }}
+        {{ toYaml .Values.apiServer.extraVolumes | nindent 6 }}
+      {{- end }}

@@ -34,6 +34,10 @@ apiServer:
       memory: "256Mi"
       cpu: "500m"
 
+  # extraVolumeMounts:
+
+  # extraVolumes:
+
 controller:
   image:
     registry: ghcr.io
@@ -104,6 +108,13 @@ dataServer:
       limits:
         memory: "128Mi"
         cpu: "500m"
+
+    # extraVolumeMounts:
+    #   - name: additional-ca-certs
+    #     mountPath: /etc/ssl/certs/additional-ca-certs.crt
+    #     subPath: tls.crt
+    #     readOnly: true
+
   server:
     image:
       registry: ghcr.io
@@ -134,6 +145,12 @@ dataServer:
   serviceAccount:
     create: true
     name: data-server-controller
+
+  # extraVolumes:
+  #   - name: additional-ca-certs
+  #     secret:
+  #       secretName: additional-ca-certs
+  #       optional: true
 
   # disabledValidators:
   #   mandatory: false
