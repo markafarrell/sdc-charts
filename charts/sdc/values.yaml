@@ -31,7 +31,7 @@ apiServer:
       memory: "128Mi"
       cpu: "250m"
     limits:
-      memory: "256Mi"
+      memory: "1Gi"
       cpu: "500m"
 
   # extraVolumeMounts:
@@ -76,7 +76,7 @@ controller:
       memory: "128Mi"
       cpu: "250m"
     limits:
-      memory: "256Mi"
+      memory: "1Gi"
       cpu: "500m"
 
 dataServer:
@@ -106,14 +106,14 @@ dataServer:
         memory: "64Mi"
         cpu: "250m"
       limits:
-        memory: "128Mi"
-        cpu: "500m"
+        memory: "2Gi"
+        cpu: "1"
 
-    # extraVolumeMounts:
-    #   - name: additional-ca-certs
-    #     mountPath: /etc/ssl/certs/additional-ca-certs.crt
-    #     subPath: tls.crt
-    #     readOnly: true
+    extraVolumeMounts:
+      - name: additional-ca-certs
+        mountPath: /etc/ssl/certs/additional-ca-certs.crt
+        subPath: tls.crt
+        readOnly: true
 
   server:
     image:
@@ -127,7 +127,7 @@ dataServer:
         memory: "64Mi"
         cpu: "250m"
       limits:
-        memory: "128Mi"
+        memory: "1Gi"
         cpu: "500m"
 
   replicas: 1
@@ -146,11 +146,11 @@ dataServer:
     create: true
     name: data-server-controller
 
-  # extraVolumes:
-  #   - name: additional-ca-certs
-  #     secret:
-  #       secretName: additional-ca-certs
-  #       optional: true
+  extraVolumes:
+    - name: additional-ca-certs
+      secret:
+        secretName: additional-ca-certs
+        optional: true
 
   # disabledValidators:
   #   mandatory: false
