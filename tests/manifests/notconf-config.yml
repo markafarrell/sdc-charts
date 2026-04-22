@@ -1,4 +1,3 @@
-
 ---
 apiVersion: config.sdcio.dev/v1alpha1
 kind: ConfigSet
@@ -6,10 +5,11 @@ metadata:
   name: customer
   namespace: notconf
 spec:
+  revertive: false
   target:
     targetSelector:
       matchLabels:
-        sdcio.dev/target-type:  sros
+        sdcio.dev/target-type: sros
   priority: 5
   config:
   - path: /
@@ -19,5 +19,7 @@ spec:
           customer:
             - customer-name: "1"
               customer-id: 1
+              description: "asdf"
             - customer-name: "2"
               customer-id: 2
+              description: "qwerty"
