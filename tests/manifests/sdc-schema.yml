@@ -10,13 +10,14 @@ spec:
   repositories:
   - repoURL: https://github.com/nokia/7x50_YangModels
     kind: tag
-    ref: sros_22.2.r1
+    ref: sros_19.10.r12
     dirs:
     - src: YANG
       dst: .
     schema:
       models:
-      - nokia-combined
+      - nokia-combined/nokia-conf-combined.yang
+      - ietf/ietf-netconf-acm.yang
       includes:
       - ietf
       - nokia-sros-yang-extensions.yang

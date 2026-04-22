@@ -29,10 +29,10 @@ spec:
     protocol: netconf
     port: 830
     paths:
-    - /
+    - /nacm
+    - /configure
     mode: get
-    encoding: CONFIG
-    interval: "30s"
+    interval: 10s
 
 ---
 apiVersion: inv.sdcio.dev/v1alpha1

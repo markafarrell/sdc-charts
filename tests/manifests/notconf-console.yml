@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notconf-console
+  namespace: notconf
+  labels:
+    app: notconf-console
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notconf-console
+  template:
+    metadata:
+      labels:
+        app: notconf-console
+    spec:
+      containers:
+      - name: notconf-console
+        image: ghcr.io/notconf/notconf:debug
+        command:
+          - sleep
+          - infinity
+        imagePullPolicy: IfNotPresent
