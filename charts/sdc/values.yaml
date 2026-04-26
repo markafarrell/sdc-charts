@@ -21,7 +21,8 @@ apiServer:
     accessModes:
       - ReadWriteOnce
 
-  env: {}
+  env:
+    KUBE_FEATURE_WatchListClient: "false"
 
   extraArgs: {}
     # feature-gates: "APIPriorityAndFairness=false"
@@ -58,7 +59,7 @@ controller:
       - ReadWriteOnce
 
   env:
-    PPROF_PORT: "8081"
+    KUBE_FEATURE_WatchListClient: "false"
     # REVERTIVE: "true"
     # ENABLE_SUBSCRIPTION:  "true"
     # ENABLE_TARGET: "true"
@@ -92,7 +93,7 @@ dataServer:
       repository: sdcio/config-server-controller
       tag: "v0.0.56"
     env:
-      PPROF_PORT: "8081"
+      KUBE_FEATURE_WatchListClient: "false"
       REVERTIVE: "true"
       ENABLE_SUBSCRIPTION:  "true"
       ENABLE_TARGET: "true"

@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - helm-manifest.yml
+patches:
+- target:
+    labelSelector: "helm.sh/chart"
+  patch: |-
+    - op: remove
+      path: /metadata/labels/helm.sh~1chart
+- target:
+    labelSelector: "app.kubernetes.io/managed-by"
+  patch: |-
+    - op: remove
+      path: /metadata/labels/app.kubernetes.io~1managed-by
