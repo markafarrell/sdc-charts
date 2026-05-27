@@ -125,7 +125,7 @@ dataServer:
     image:
       registry: ghcr.io
       repository: sdcio/data-server
-      tag: "v0.0.68"
+      tag: "v0.0.69"
     env: {}
     extraArgs: {}
     resources:
