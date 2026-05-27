@@ -9,7 +9,7 @@ apiServer:
   image:
     registry: ghcr.io
     repository: sdcio/config-server-api-server
-    tag: "v0.0.56"
+    tag: "v0.0.57"
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -45,7 +45,7 @@ controller:
   image:
     registry: ghcr.io
     repository: sdcio/config-server-controller
-    tag: "v0.0.56"
+    tag: "v0.0.57"
     pullPolicy: IfNotPresent
 
   serviceAccount:
@@ -90,7 +90,7 @@ dataServer:
     image:
       registry: ghcr.io
       repository: sdcio/config-server-controller
-      tag: "v0.0.56"
+      tag: "v0.0.57"
     env:
       PPROF_PORT: "8081"
       REVERTIVE: "true"
