@@ -38,9 +38,8 @@ function main() {
         printf "===== Config applied test passed ✅ =====\n"
     else
         printf "===== Config applied test failed ❌ =====\n"
+        TESTS_PASSED=1
     fi
-
-    TESTS_PASSED=$([[ $TESTS_PASSED || $TEST_CONFIG_APPLIED_RESULT ]])
 
     if [[ "$TESTS_PASSED" -eq 0 ]]; then
         printf "===== All tests passed ✅ =====\n"
