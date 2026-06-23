@@ -32,7 +32,7 @@ spec:
       containers:
       - name: controller
         image: {{ include "controller.image" . }}
-        imagePullPolicy: Always
+        imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
         command:
         - /app/controller
         {{- range $key, $value := .Values.controller.extraArgs }}
