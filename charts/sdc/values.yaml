@@ -91,6 +91,7 @@ dataServer:
       registry: ghcr.io
       repository: sdcio/config-server-controller
       tag: "v0.0.57"
+      pullPolicy: IfNotPresent
     env:
       PPROF_PORT: "8081"
       REVERTIVE: "true"
@@ -126,6 +127,7 @@ dataServer:
       registry: ghcr.io
       repository: sdcio/data-server
       tag: "v0.0.69"
+      pullPolicy: IfNotPresent
     env: {}
     extraArgs: {}
     resources:

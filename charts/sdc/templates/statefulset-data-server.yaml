@@ -32,7 +32,7 @@ spec:
       containers:
       - name: controller
         image: {{ include "data-server-controller.image" . }}
-        imagePullPolicy: Always
+        imagePullPolicy: {{ .Values.dataServer.controller.image.pullPolicy }}
         command:
         - /app/controller
         {{- range $key, $value := .Values.dataServer.controller.extraArgs }}
@@ -84,7 +84,7 @@ spec:
           {{- toYaml .Values.dataServer.controller.resources | nindent 10 }}
       - name: data-server
         image: {{ include "data-server-server.image" . }}
-        imagePullPolicy: Always
+        imagePullPolicy: {{ .Values.dataServer.server.image.pullPolicy }}
         command:
         - /app/data-server
         args:
