@@ -1,0 +1,3 @@
+installation-manifest.yml
+helm-manifest.yml
+kustomized-helm-manifest.yml

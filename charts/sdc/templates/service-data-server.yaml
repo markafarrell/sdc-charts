@@ -7,6 +7,7 @@ metadata:
     {{- include "sdc.labels" . | nindent 4 }}
     app.kubernetes.io/component: data-server-controller
 spec:
+  clusterIP: None
   ports:
   - name: data-service
     port: 56000
