@@ -20,3 +20,7 @@ updates:
         interval: "daily"
       commit-message:
         prefix: feat(deps)
+      groups:
+        image-updates:
+          patterns:
+            - "*"
